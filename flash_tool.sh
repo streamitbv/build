@@ -17,14 +17,12 @@ BOOT_START=`expr ${ATF_START}  + ${ATF_SIZE}`
 ROOTFS_START=`expr ${BOOT_START}  + ${BOOT_SIZE}`
 
 LOCALPATH=$(pwd)
-TOOLPATH=${LOCALPATH}/rkbin/tool
+TOOLPATH=${LOCALPATH}/rkbin/tools
 CHIP=""
 DEVICE=""
 IMAGE=""
 DEVICE=""
 SEEK="0"
-
-PATH=$PATH:$TOOLPATH
 
 usage() {
 	echo -e "\nUsage: rk3x \n"
@@ -82,22 +80,22 @@ fi
 flash_upgt() 
 {
 	if [ "${CHIP}" == "rk3288" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_v1.01.06.bin
+		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_v1.01.06.bin
 	elif [ "${CHIP}" == "rk3036" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk30/rk3036_loader_v1.07.219.bin
+		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk30/rk3036_loader_v1.07.219.bin
 	elif [ "${CHIP}" == "rk3399" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk33/rk3399_loader_v1.08.106.bin
+		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk33/rk3399_loader_v1.08.106.bin
 	elif [ "${CHIP}" == "rk3228" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rk33/rk3328_loader_v1.00.238.bin
+		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rk33/rk3328_loader_v1.00.238.bin
 	elif [ "${CHIP}" == "rv1108" ] ; then
-		sudo upgrade_tool db  ${LOCALPATH}/rkbin/rv1x/RK1108_usb_boot.bin
+		sudo $TOOLPATH/rkdeveloptool db  ${LOCALPATH}/rkbin/rv1x/RK1108_usb_boot.bin
 	fi
 
-	sudo upgrade_tool wl ${SEEK} ${IMAGE}
+	sudo $TOOLPATH/rkdeveloptool wl ${SEEK} ${IMAGE}
 
 	sleep 3
 
-	sudo upgrade_tool rd
+	sudo $TOOLPATH/rkdeveloptool rd
 }
 
 flash_sdcard() 
