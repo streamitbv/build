@@ -89,9 +89,9 @@ flash_upgt() {
 		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rv1x/RK1108_usb_boot.bin
 	fi
 
-	sudo $TOOLPATH/rkdeveloptool wl ${SEEK} ${IMAGE}
+	sleep 1
 
-	sleep 3
+	sudo $TOOLPATH/rkdeveloptool wl ${SEEK} ${IMAGE}
 
 	sudo $TOOLPATH/rkdeveloptool rd
 }
