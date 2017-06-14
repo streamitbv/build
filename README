@@ -1,13 +1,6 @@
 Rockchip Yocto BSP
 ===============================
 
-Supported boards
-----------------
-
-In order to know the supported boards, please, see the release notes at
-
-   http://rockchip.wikidot.com/yocto-user-guide#toc1
-
 Quick Start Guide
 -----------------
 
@@ -20,4 +13,4 @@ After this step, you will be with everything need for build an image.
 
 To get more info, see at
 
-   http://rockchip.wikidot.com/yocto-user-guide
+   http://opensource.rock-chips.com/wiki_Yocto
