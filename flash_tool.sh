@@ -77,19 +77,23 @@ if [ ! $IMAGE ]; then
 fi
 
 flash_upgt() {
-	if [ "${CHIP}" == "rk3288" ]; then
-		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_*.bin
-	elif [ "${CHIP}" == "rk3036" ]; then
-		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk30/rk3036_loader_*.bin
-	elif [ "${CHIP}" == "rk3399" ]; then
-		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3399_loader_*.bin
-	elif [ "${CHIP}" == "rk3228" ]; then
-		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3328_loader_*.bin
-	elif [ "${CHIP}" == "rv1108" ]; then
-		sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rv1x/RK1108_usb_boot.bin
-	fi
-
-	sleep 1
+    if ! sudo $TOOLPATH/rkdeveloptool td ; then
+        echo "Installing bootloader"
+        if [ "${CHIP}" == "rk3288" ]; then
+            sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_*.bin
+        elif [ "${CHIP}" == "rk3036" ]; then
+            sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk30/rk3036_loader_*.bin
+        elif [ "${CHIP}" == "rk3399" ]; then
+            sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3399_loader_*.bin
+        elif [ "${CHIP}" == "rk3328" ]; then
+            sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk33/rk3328_loader_*.bin
+        elif [ "${CHIP}" == "rv1108" ]; then
+            sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rv1x/RK1108_usb_boot.bin
+        fi
+        sleep 1
+    else
+        echo "Not installing bootloader"
+    fi
 
 	sudo $TOOLPATH/rkdeveloptool wl ${SEEK} ${IMAGE}
 
