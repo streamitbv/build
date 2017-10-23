@@ -24,12 +24,32 @@ IMAGE=""
 DEVICE=""
 SEEK="0"
 
+# Ensure all files in sources/base are kept in sync with project root
+updated=
+for f in `pwd`/sources/base/*; do
+    file="$(basename $f)"
+    if [ "$file" = "conf" ] || echo $file | grep -q '~$'; then
+        continue
+    fi
+
+    if ! cmp -s "$file" "$f"; then
+        updated="true"
+        [ -e $file ] && chmod u+w $file
+        cp $f $file
+    fi
+done
+
+if [ "$updated" == "true" ]; then
+    echo "The project root content has been updated. Please run again."
+    exit
+fi
+
 usage() {
 	echo -e "\nUsage: rk3x \n"
-	echo -e "		emmc: build/flash_tool.sh -c rk3288  -p system -i out/system.img  \n"
-	echo -e "       sdcard: build/flash_tool.sh -c rk3288  -d /dev/sdb -p system  -i out/system.img \n"
+	echo -e "	emmc: build/flash_tool.sh -c rk3288  -p system -i out/system.img  \n"
+	echo -e "	sdcard: build/flash_tool.sh -c rk3288  -d /dev/sdb -p system  -i out/system.img \n"
 	echo -e "\nUsage: rv \n"
-	echo -e "       sdcard: build/flash_tool.sh -c rk1108 -i out/firmware.img \n"
+	echo -e "	sdcard: build/flash_tool.sh -c rk1108 -i out/firmware.img \n"
 
 }
 
@@ -101,7 +121,8 @@ flash_upgt() {
 }
 
 flash_sdcard() {
-	sudo dd if=${IMAGE} of=${DEVICE} seek=${SEEK} conv=notrunc
+	pv -tpreb ${IMAGE} | sudo dd of=${DEVICE} seek=${SEEK} conv=notrunc
+	sync
 }
 
 if [ ! $DEVICE ]; then
