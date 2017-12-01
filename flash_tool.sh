@@ -24,6 +24,8 @@ IMAGE=""
 DEVICE=""
 SEEK="0"
 
+MACFILE=""
+
 # Ensure all files in sources/base are kept in sync with project root
 updated=
 for f in `pwd`/sources/base/*; do
@@ -59,7 +61,7 @@ finish() {
 }
 trap finish ERR
 
-while getopts "c:t:s:d:p:r:d:i:h" flag; do
+while getopts "c:t:s:d:p:r:d:i:h:m" flag; do
 	case $flag in
 		c)
 			CHIP="$OPTARG"
@@ -75,6 +77,9 @@ while getopts "c:t:s:d:p:r:d:i:h" flag; do
 				exit
 			fi
 			;;
+        m)
+            MACFILE="$OPTARG"
+            ;;
 		p)
 			PARTITIONS="$OPTARG"
 			BPARTITIONS=$(echo $PARTITIONS | tr 'a-z' 'A-Z')
@@ -98,7 +103,7 @@ fi
 
 flash_upgt() {
     if ! sudo $TOOLPATH/rkdeveloptool td ; then
-        echo "Installing bootloader"
+        echo "Uploading bootloader"
         if [ "${CHIP}" == "rk3288" ]; then
             sudo $TOOLPATH/rkdeveloptool db ${LOCALPATH}/rkbin/rk32/rk3288_ubootloader_*.bin
         elif [ "${CHIP}" == "rk3036" ]; then
@@ -112,10 +117,15 @@ flash_upgt() {
         fi
         sleep 1
     else
-        echo "Not installing bootloader"
+        echo "Not uploading bootloader"
     fi
 
 	sudo $TOOLPATH/rkdeveloptool wl ${SEEK} ${IMAGE}
+
+    if [ -n "${MACFILE}" ] && [ -e "${MACFILE}" ]; then
+        echo "Installing MAC address"
+        sudo $TOOLPATH/rkdeveloptool wl ${RESERVED1_START} ${MACFILE}
+    fi
 
 	sudo $TOOLPATH/rkdeveloptool rd
 }
