@@ -177,6 +177,12 @@ EOF
         -e "s,PACKAGE_CLASSES ?=.*,PACKAGE_CLASSES ?= '$PACKAGE_CLASSES',g" \
         -i conf/local.conf
 
+    echo "" >> conf/local.conf
+
+    echo "PREFERRED_PROVIDER_virtual/java-initial-native = \"cacao-initial-native\"" >> conf/local.conf
+    echo "PREFERRED_PROVIDER_virtual/java-native = \"jamvm-native\"" >> conf/local.conf
+
+
     if [[ ${DISTRO:0:2} == "rv" ]];then
         cp $TEMPLATES/bblayers_rv.conf conf/bblayers.conf
     else
